@@ -3,24 +3,28 @@ import { BasePage } from './BasePage';
 import { URLs } from '../fixtures/urls';
 
 export class HomePage extends BasePage {
-
   constructor(page: Page) {
     super(page);
-    this.page = page;
   }
 
   //Navigate to darktrace home page
-  async navigate() {
-    await this.page.goto(URLs.baseURL, { waitUntil: 'load' });
-    await this.acceptCookiesIfPresent()
+  async open() {
+    await this.navigate(URLs.baseURL);
+    await this.acceptCookies();
+    await this.waitForPageLoad();
+  }
+
+  //Verify page URL
+  async verifyPageLoaded() {
+    await expect(this.page).toHaveURL(URLs.baseURL);
+    await expect(this.page.locator('body')).toBeVisible();
   }
 
   //Verify Page title
-  async verifyTitle(expectedTitle: string) {
-    await expect(this.page).toHaveTitle(expectedTitle);
+  async verifyTitle() {
+    await expect(this.page).toHaveTitle('Darktrace | The Essential AI Cybersecurity Platform');
   }
 
-  
 }
 
 
