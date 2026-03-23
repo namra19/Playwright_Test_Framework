@@ -1,18 +1,19 @@
 import { test, expect, Browser, chromium, Page } from '@playwright/test';
 import { HomePage } from '../page-objects/HomePage'
 
-test.describe('Darktrace Home Page Tests', async () => {
-
+test.describe('Darktrace Homepage Tests', () => {
   let homePage: HomePage;
+
   test.beforeEach(async ({ page }) => {
-
     homePage = new HomePage(page);
-    await homePage.navigate();
+    await homePage.open();
   });
 
-  //Test 1 - Verify darktrace home page is loaded successfully 
-  test('Verify darktrace home page opens successfully', async ({ page }) => {
-    await homePage.verifyTitle('Darktrace | The Essential AI Cybersecurity Platform');
+  test('Verify Home Page Loads Successfully', async ({ page }) => {
+    await homePage.verifyPageLoaded();
   });
 
-});
+  test('Verify Home Page Title', async ({ page }) => {
+    await homePage.verifyTitle();
+  });
+})
