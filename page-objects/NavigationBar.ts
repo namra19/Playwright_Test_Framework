@@ -2,7 +2,19 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { URLs } from '../fixtures/urls';
 
+type SubMenuItem = {
+    label: string;
+    urlPart?: string;
+    opensNewTab?: boolean;
+};
+
+type MenuSection = {
+    menuName: string;
+    subItems: SubMenuItem[];
+};
+
 export class NavigationBar {
+
     readonly page: Page;
 
     //Locators for navigation bar elements
@@ -12,6 +24,7 @@ export class NavigationBar {
     readonly resources: Locator;
     readonly getDemo: Locator;
     readonly navBar: Locator;
+    readonly logo: Locator;
 
 
     constructor(page: Page) {
@@ -22,31 +35,10 @@ export class NavigationBar {
         this.resources = page.getByRole('button', { name: 'Resources' });
         this.getDemo = page.getByRole('navigation').getByRole('link', { name: 'Get a demo' });
         this.navBar = page.locator('.navbar6_menu-inner').first()
+        this.logo = page.getByRole('navigation').getByRole('link').filter({ hasText: '.logo-svg path { transition:' })
 
     }
 
-    //Action methods for navigation bar
-    async clickPlatform() {
-        await this.platform.click();
-    }
-
-    async clickSolutions() {
-        await this.solutions.click();
-    }
-
-    async clickWhyDarktrace() {
-        await this.whyDarktrace.click();
-    }
-
-    async clickResources() {
-        await this.resources.click();
-    }
-
-    async clickGetDemo() {
-        await this.getDemo.click();
-    }
-
-    //Assertion methods for navigation bar
     async assertNavItemsVisible() {
         await expect(this.platform).toBeVisible();
         await expect(this.solutions).toBeVisible();
@@ -76,4 +68,22 @@ export class NavigationBar {
             .getByRole('button', { name: menuName, exact: true })
             .first();
     }
+
+    async assertLogoVisible() {
+        await expect(this.logo).toBeVisible();
+    }
+
+    async assertLogoLinksToHome() {
+        await expect(this.logo).toHaveAttribute('href', '/');
+    }
+
+    async clickLogo() {
+        await this.logo.click();
+    }
+
+    getSubMenuItemByName(name: string): Locator {
+        return this.page.getByRole('link', { name }).first();
+
+    }
+
 }   

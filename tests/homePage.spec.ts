@@ -1,6 +1,9 @@
 import { test, expect, Browser, chromium, Page, Locator } from '@playwright/test';
 import { HomePage } from '../page-objects/HomePage'
 import { NavigationBar } from '../page-objects/NavigationBar';
+import { URLs } from '../fixtures/urls';
+import { navigationData } from '../fixtures/navigationData';
+import { NavigationValidator } from '../utils/utils';
 
 test.describe('Darktrace Homepage Tests', () => {
   let homePage: HomePage;
@@ -39,7 +42,26 @@ test.describe('Darktrace Homepage Tests', () => {
     await navBar.hoverOverMenu(navBar.getDemo);
   });
 
+  test('Verify logo redirects to homepage when clicked', async ({ page }) => {
+    await navBar.clickLogo();
+    await expect(page).toHaveURL(URLs.baseURL);
   });
+
+  test('Verify logo visual appearance', async ({ page }) => {
+    await navBar.assertLogoVisible();
+    await expect(navBar.logo).toHaveScreenshot('logo.png');
+  });
+
+test('Validate all navigation menus', async ({ page, context }) => {
+  const homePage = new HomePage(page);
+  const navBar = new NavigationBar(page);
+  const validator = new NavigationValidator(page, navBar, context);
+
+  for (const section of navigationData) {
+    await validator.validateMenu(section);
+  }
+});
+});
 
 
 
