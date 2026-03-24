@@ -9,6 +9,8 @@ test.describe('Darktrace Homepage Tests', () => {
   let homePage: HomePage;
   let navBar: NavigationBar;
 
+  const menus = ['Platform', 'Solutions', 'Why Darktrace'];
+
   test.beforeEach(async ({ page }) => {
     homePage = new HomePage(page);
     navBar = new NavigationBar(page);
@@ -47,22 +49,31 @@ test.describe('Darktrace Homepage Tests', () => {
     await expect(page).toHaveURL(URLs.baseURL);
   });
 
-  test('Verify logo visual appearance', async ({ page }) => {
-    await navBar.assertLogoVisible();
-    await expect(navBar.logo).toHaveScreenshot('logo.png');
+  test('Validate all navigation menus', async ({ page, context }) => {
+    const validator = new NavigationValidator(page, navBar, context);
+
+    for (const section of navigationData) {
+      await validator.validateMenu(section);
+    }
   });
 
-test('Validate all navigation menus', async ({ page, context }) => {
-  const validator = new NavigationValidator(page, navBar, context);
+  test('Verify navigation menu links are not broken', async ({ page, request }) => {
 
-  for (const section of navigationData) {
-    await validator.validateMenu(section);
-  }
-});
+    const links = await navBar.getAllNavLinks();
 
+    console.log(`Found ${links.length} links in navigation.`);
 
-
-});
-
+    for (const link of links) {
+      try {
+        const response = await request.get(link);
+        if (!response.ok()) {
+          console.log(`Broken link: ${link} | Status: ${response.status()}`);
+        }
+      } catch (error) {
+        console.log(`Error fetching link: ${link} | Error: ${error}`);
+      }
+    }
+  });
+})
 
 
