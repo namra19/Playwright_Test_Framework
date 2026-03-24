@@ -1,4 +1,4 @@
-import { chromium, Locator, Page } from '@playwright/test';
+import { chromium, Page } from '@playwright/test';
 
 export class BasePage {
   constructor(protected page: Page) {
@@ -6,7 +6,7 @@ export class BasePage {
   }
   // Navigate to a URL and handle cookie popup if it exists
   async navigate(url: string) {
-    const browser = await chromium.launch({ headless: false });
+    const browser = await chromium.launch({ headless: true });
       const context = await browser.newContext({
     ignoreHTTPSErrors: true, 
   });

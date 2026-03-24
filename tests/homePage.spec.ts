@@ -53,16 +53,16 @@ test.describe('Darktrace Homepage Tests', () => {
   });
 
 test('Validate all navigation menus', async ({ page, context }) => {
-  const homePage = new HomePage(page);
-  const navBar = new NavigationBar(page);
   const validator = new NavigationValidator(page, navBar, context);
 
   for (const section of navigationData) {
     await validator.validateMenu(section);
   }
 });
-});
 
+
+
+});
 
 
 
