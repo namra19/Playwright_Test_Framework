@@ -1,6 +1,5 @@
 
 import { Locator, Page, expect } from '@playwright/test';
-import { URLs } from '../fixtures/urls';
 
 type SubMenuItem = {
     label: string;
@@ -16,8 +15,7 @@ type MenuSection = {
 export class NavigationBar {
 
     readonly page: Page;
-
-    //Locators for navigation bar elements
+    
     readonly platform: Locator;
     readonly solutions: Locator;
     readonly whyDarktrace: Locator;
@@ -85,5 +83,4 @@ export class NavigationBar {
         return this.page.getByRole('link', { name }).first();
 
     }
-
 }   
