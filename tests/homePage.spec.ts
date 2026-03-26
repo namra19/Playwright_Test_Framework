@@ -59,6 +59,7 @@ test.describe('Darktrace Homepage Tests', () => {
     console.log('Actual Products:', productPlatform.products);
   });
 
+  //This test will fail in the pipeline as it doesn't match the requirements mentioned in the document
   test('Validate Resources navigation menus', async ({ page, context }) => {
     const validator = new NavigationValidator(page, navBar, context);
     const expectedProductsResources = navigationData.find(menu => menu.menuName === 'Resources')?.items || [];
