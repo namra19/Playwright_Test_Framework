@@ -32,6 +32,7 @@ test.describe('Darktrace - Get a Demo Flow', () => {
       company: demoUser.company,
       employees: demoUser.employees,
     });
+
     await demoPage.goToStep3();
 
     // Step 3

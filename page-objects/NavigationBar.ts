@@ -1,21 +1,20 @@
-
 import { Locator, Page, expect } from '@playwright/test';
 
-type SubMenuItem = {
-    label: string;
-    urlPart?: string;
-    opensNewTab?: boolean;
-};
+// type SubMenuItem = {
+//    label: string;
+//    urlPart?: string;
+//    opensNewTab?: boolean;
+// };
 
-type MenuSection = {
-    menuName: string;
-    subItems: SubMenuItem[];
-};
+// type MenuSection = {
+//    menuName: string;
+//    subItems: SubMenuItem[];
+// };
 
 export class NavigationBar {
 
     readonly page: Page;
-    
+
     readonly platform: Locator;
     readonly solutions: Locator;
     readonly whyDarktrace: Locator;
@@ -23,6 +22,7 @@ export class NavigationBar {
     readonly getDemo: Locator;
     readonly navBar: Locator;
     readonly logo: Locator;
+    readonly menuItems: Locator;
 
 
     constructor(page: Page) {
@@ -34,6 +34,8 @@ export class NavigationBar {
         this.getDemo = page.getByRole('navigation').getByRole('link', { name: 'Get a demo' });
         this.navBar = page.locator('.navbar6_menu-inner').first()
         this.logo = page.getByRole('navigation').getByRole('link').filter({ hasText: '.logo-svg path { transition:' })
+        this.menuItems = page.locator('header nav >> ul >> li');
+
 
     }
 
@@ -60,19 +62,28 @@ export class NavigationBar {
         await menu.hover();
     }
 
+    async hoverMenu(menuName: string) {
+        const menu = this.menuItems.locator(`text=${menuName}`);
+        await menu.hover();
+    }
+
+    async getSubmenuLinks(menuName: string): Promise<Locator[]> {
+        const menu = this.menuItems.locator(`text=${menuName}`);
+        await menu.hover();
+        const submenuLinks = menu.locator('ul li a');
+        const count = await submenuLinks.count();
+        const links: Locator[] = [];
+        for (let i = 0; i < count; i++) {
+            links.push(submenuLinks.nth(i));
+        }
+        return links;
+    }
+
     getMenu(menuName: string): Locator {
         return this.page
             .locator('nav')
             .getByRole('button', { name: menuName, exact: true })
             .first();
-    }
-
-    async assertLogoVisible() {
-        await expect(this.logo).toBeVisible();
-    }
-
-    async assertLogoLinksToHome() {
-        await expect(this.logo).toHaveAttribute('href', '/');
     }
 
     async clickLogo() {
@@ -83,4 +94,24 @@ export class NavigationBar {
         return this.page.getByRole('link', { name }).first();
 
     }
-}   
+
+    topLevelLinks = 'nav a';
+    submenuLinks = 'nav li ul li a';
+
+    async getAllNavLinks(): Promise<string[]> {
+        const links: string[] = [];
+
+        const topLinks = await this.page.$$eval(this.topLevelLinks, (els) =>
+            els.map((el) => (el as HTMLAnchorElement).href)
+        );
+        links.push(...topLinks);
+
+        const subLinks = await this.page.$$eval(this.submenuLinks, (els) =>
+            els.map((el) => (el as HTMLAnchorElement).href)
+        );
+        links.push(...subLinks);
+        return Array.from(new Set(links));
+    }
+   
+}
+

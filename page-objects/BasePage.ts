@@ -7,9 +7,6 @@ export class BasePage {
   // Navigate to a URL and handle cookie popup if it exists
   async navigate(url: string) {
     const browser = await chromium.launch({ headless: true });
-      const context = await browser.newContext({
-    ignoreHTTPSErrors: true, 
-  });
     await this.page.goto(url, { waitUntil: 'domcontentloaded' });
   }
 
