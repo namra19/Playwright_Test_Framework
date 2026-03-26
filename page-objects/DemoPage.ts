@@ -1,4 +1,3 @@
-// page-objects/DemoPage.ts
 import { BasePage } from './BasePage';
 import { Page, Locator, expect } from '@playwright/test';
 
