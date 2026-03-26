@@ -63,36 +63,36 @@ HTML Report - npx playwright show-report
 └── README.md
 ```
 
-### Test Coverage
+## Test Coverage
 The test suite focuses on validating the homepage and navigation bar functionality, ensuring both UI behavior and link integrity.
 
-* Home Page Validation
+### Home Page Validation
 - Verify that the home page loads successfully
 - Validate that the page title is correct
 
-* Navigation Bar UI & Behavior
+### Navigation Bar UI & Behavior
 - Verify all navigation bar items are visible
 - Ensure the navigation bar remains visible during scrolling
 - Validate hover interactions across all main menu items:
-** Platform
-** Solutions
-** Why Darktrace
-** Resources
+    - Platform
+    - Solutions
+    - Why Darktrace
+    - Resources
 - Verify that clicking the logo redirects to the homepage
 
-* Navigation Menu Validation
+### Navigation Menu Validation
 Validate dropdown menu structure for Platform navigation
 Validate dropdown menu structure for Resources navigation (known failing test based on current requirements mismatch)
 
-* Link Integrity
+### Link Integrity
 Verify that all navigation menu links are functional
 Detect and report broken links based on HTTP response status
 
-* Performance Validation
+### Performance Validation
 Ensure all page resources load within acceptable performance limits
 Flag any resources taking longer than 1 second to load
 
-* Notes
+### Notes
 - One test (Resources navigation menus) is intentionally failing due to a mismatch between implementation and expected requirements (as mentioned in the document)
 - Link validation uses API requests to verify response status codes
 - Performance checks are based on browser performance API
